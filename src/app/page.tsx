@@ -1,9 +1,13 @@
+import { Button } from "@mui/material";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <p className="text-red-500">Hello World</p>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <Image src="/logo.png" alt="Logo" width={300} height={300} />
+      <Button variant="contained" color="primary" href="/script-generator" sx={{ mt: 2, backgroundColor: "rgb(100,126,220)", color: "#fff" }}>
+        Get Started
+      </Button>
     </div>
   );
 }
