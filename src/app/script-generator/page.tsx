@@ -208,7 +208,9 @@ export default function ScriptGeneratorPage() {
                 Generated Script
               </Typography>
               <Typography variant="body2" color="text.secondary" gutterBottom>
-                Your generated script will appear in the box below. You can edit, copy or save it to the library once you are happy with the end result.
+                Your generated script will appear in the box below. You can
+                edit, copy or save it to the library once you are happy with the
+                end result.
               </Typography>
 
               <TextField
@@ -216,16 +218,24 @@ export default function ScriptGeneratorPage() {
                 rows={12}
                 fullWidth
                 value={script}
+                variant="outlined"
                 onChange={(e) => setScript(e.target.value)}
                 sx={{
-                  flexGrow: 1,
-                  my: 2,
+                  mt: 2,
                   borderRadius: 2,
-                  border: "3px dashed lightgray",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    border: "2px dashed lightgray", // <-- apply custom border here
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "gray", // optional hover effect
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "black", // optional focus effect
+                  },
                 }}
               />
 
-              <Box display="flex" gap={2}>
+              <Box display="flex" gap={2} mt={3}>
                 <Button
                   variant="contained"
                   onClick={() => navigator.clipboard.writeText(script)}
