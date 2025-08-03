@@ -12,7 +12,7 @@ export async function POST(req: Request) {
 
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db("test");
     const scripts = db.collection("scripts");
 
     const result = await scripts.insertOne({
@@ -51,7 +51,7 @@ export async function GET(req: Request) {
 
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db("test");
     const scripts = db.collection("scripts");
 
     // Build query

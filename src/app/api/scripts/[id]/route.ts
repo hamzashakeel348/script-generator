@@ -16,7 +16,7 @@ export async function GET(
 
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db("test");
     const script = await db.collection("scripts").findOne({
       _id: new ObjectId(id),
       clerkUserId: userId,
@@ -47,7 +47,7 @@ export async function PATCH(
 
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db("test");
     const result = await db.collection("scripts").updateOne(
       {
         _id: new ObjectId(id),
@@ -86,7 +86,7 @@ export async function DELETE(
 
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db("test");
     const result = await db.collection("scripts").deleteOne({
       _id: new ObjectId(id),
       clerkUserId: userId,
