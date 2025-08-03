@@ -1,14 +1,8 @@
 import "@/app/globals.css";
 import MuiThemeProvider from "@/theme/theme-provider";
-
-import {
-  ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
+import LayoutWrapper from "@/components/LayoutWrapper";
+import { Toaster } from "react-hot-toast";
 
 export const metadata = {
   title: "Script Generator",
@@ -22,22 +16,12 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
+      <Toaster position="top-right" />
       <html lang="en">
-        <body>
-          <header className="flex justify-end items-center p-4 gap-4 h-16">
-            <SignedOut>
-              <SignInButton />
-              <SignUpButton>
-                <button className="bg-[#6c47ff] text-ceramic-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
-                  Sign Up
-                </button>
-              </SignUpButton>
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
-          <MuiThemeProvider>{children}</MuiThemeProvider>
+        <body className="h-screen overflow-hidden bg-gray-50">
+          <MuiThemeProvider>
+            <LayoutWrapper>{children}</LayoutWrapper>
+          </MuiThemeProvider>
         </body>
       </html>
     </ClerkProvider>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   TextField,
@@ -29,14 +29,26 @@ export default function ScriptGeneratorPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const generateScript = () => {
+  const generateScript = async () => {
     setScript(
       `Introducing ${form.productName}! Perfect for ${form.audience}.\n\nKey Benefits:\n${form.benefits}\n\nCall to Action: ${form.cta}`
     );
   };
 
+  const handleSave = async () => {
+    await fetch("/api/scripts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: "New Script",
+        content: script,
+        type: form.type,
+      }),
+    });
+  };
+
   return (
-    <Box sx={{ p: 4, minHeight: "100vh", backgroundColor: "#f9fafb" }}>
+    <Box sx={{ p: 4, minHeight: "100vh" }}>
       <Box sx={{ maxWidth: "lg", margin: "auto" }}>
         <Box
           sx={{
@@ -245,10 +257,7 @@ export default function ScriptGeneratorPage() {
                 <Button variant="outlined" onClick={generateScript}>
                   Regenerate
                 </Button>
-                <Button
-                  variant="outlined"
-                  onClick={() => alert("Saved to library!")}
-                >
+                <Button variant="outlined" onClick={handleSave}>
                   Save
                 </Button>
               </Box>
