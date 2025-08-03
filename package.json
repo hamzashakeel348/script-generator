@@ -9,14 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/clerk-js": "^5.79.0",
     "@clerk/nextjs": "^6.28.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.2.0",
     "@mui/material": "^7.2.0",
+    "mongodb": "^6.18.0",
+    "mongoose": "^8.17.0",
     "next": "15.4.5",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "react-hot-toast": "^2.5.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
