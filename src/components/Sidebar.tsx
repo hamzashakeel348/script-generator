@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { SignOutButton, useUser } from "@clerk/nextjs";
 import {
@@ -12,10 +13,26 @@ import {
 } from "@mui/icons-material";
 
 const navItems = [
-  { label: "Script Generator", href: "/script-generator", icon: <HomeIcon /> },
-  { label: "Script Library", href: "/script-library", icon: <ArticleIcon /> },
-  { label: "Settings", href: "/settings", icon: <SettingsIcon /> },
-  { label: "Support", href: "/support", icon: <SupportIcon /> },
+  {
+    label: "Script Generator",
+    href: "/script-generator",
+    icon: <Image src="/generator.png" alt="Logo" width={20} height={20} />,
+  },
+  {
+    label: "Script Library",
+    href: "/script-library",
+    icon: <Image src="/library.png" alt="Logo" width={20} height={20} />,
+  },
+  {
+    label: "Settings",
+    href: "/settings",
+    icon: <Image src="/settings.png" alt="Logo" width={20} height={20} />,
+  },
+  {
+    label: "Support",
+    href: "/support",
+    icon: <Image src="/support.png" alt="Logo" width={20} height={20} />,
+  },
 ];
 
 export default function Sidebar() {
@@ -23,10 +40,13 @@ export default function Sidebar() {
   const { user } = useUser();
 
   return (
-    <aside className="w-64 min-h-screen bg-white px-4 py-6 hidden md:block">
-      <h2 className="text-xl font-semibold mb-6 text-purple-700">
-        Script Tool
-      </h2>
+    <aside className="w-70 min-h-screen bg-white px-4 py-6 hidden md:block">
+      <div className="flex items-center gap-2 mb-6">
+        <Image src="/logo-new.png" alt="Logo" width={30} height={30} />
+        <h2 className="text-xl font-medium text-black italic">
+          1 Second Script
+        </h2>
+      </div>
 
       <nav className="space-y-2">
         {navItems.map((item) => (
@@ -36,7 +56,7 @@ export default function Sidebar() {
             className={`flex items-center px-3 py-2 rounded-md text-sm font-medium 
               ${
                 pathname.startsWith(item.href)
-                  ? "bg-[#3661e2] text-white"
+                  ? "bg-[#2463EB] text-white"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
           >
@@ -46,9 +66,9 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div className="absolute bottom-10 left-10 right-0">
-        <div className="mt-10 text-xs text-gray-500">
-          <p className="mb-1">Logged in as</p>
+      <div className="absolute bottom-5 left-7 right-0">
+        <div className="mt-10 text-sm text-gray-500 flex items-center gap-2">
+          <Image src="/user-icon.png" alt="Logo" width={20} height={20} />
           <p className="font-medium text-gray-800">
             {user?.primaryEmailAddress?.emailAddress}
           </p>
@@ -56,8 +76,7 @@ export default function Sidebar() {
 
         <div className="mt-6">
           <SignOutButton>
-            <button className="flex items-center gap-2 text-sm text-red-500 hover:text-red-700 cursor-pointer">
-              <LogoutIcon fontSize="small" />
+            <button className="text-sm bg-[#2463EB] w-60 text-center text-white rounded-[10px] px-4 py-2 cursor-pointer">
               Sign Out
             </button>
           </SignOutButton>

@@ -15,7 +15,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      afterSignOutUrl="/"
+      signInForceRedirectUrl="/script-generator"
+    >
       <Toaster position="top-right" />
       <html lang="en">
         <body className="h-screen overflow-hidden bg-gray-50">

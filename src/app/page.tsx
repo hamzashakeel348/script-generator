@@ -6,7 +6,6 @@ import { SignInButton, useUser } from "@clerk/nextjs";
 
 export default function Home() {
   const { user } = useUser();
-  console.log(user);
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <Image src="/logo.png" alt="Logo" width={300} height={300} />
