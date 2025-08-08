@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { SignOutButton, useUser } from "@clerk/nextjs";
+import { SignOutButton, useUser, UserButton } from "@clerk/nextjs";
 import {
   Home as HomeIcon,
   Article as ArticleIcon,
@@ -23,11 +23,11 @@ const navItems = [
     href: "/script-library",
     icon: <Image src="/library.png" alt="Logo" width={20} height={20} />,
   },
-  {
-    label: "Settings",
-    href: "/settings",
-    icon: <Image src="/settings.png" alt="Logo" width={20} height={20} />,
-  },
+  //   {
+  //     label: "Settings",
+  //     href: "/settings",
+  //     icon: <Image src="/settings.png" alt="Logo" width={20} height={20} />,
+  //   },
   {
     label: "Support",
     href: "/support",
@@ -68,7 +68,16 @@ export default function Sidebar() {
 
       <div className="absolute bottom-5 left-7 right-0">
         <div className="mt-10 text-sm text-gray-500 flex items-center gap-2">
-          <Image src="/user-icon.png" alt="Logo" width={20} height={20} />
+          <UserButton
+            appearance={{
+              elements: {
+                userButtonPopoverCard: {
+                  backgroundColor: "white",
+                },
+              },
+            }}
+          />
+
           <p className="font-medium text-gray-800">
             {user?.primaryEmailAddress?.emailAddress}
           </p>

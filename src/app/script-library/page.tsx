@@ -77,6 +77,22 @@ export default function ScriptLibraryPage() {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    try {
+      await fetch(`/api/scripts/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      toast.success("Script deleted");
+      setModalOpen(false);
+      fetchScripts();
+    } catch (error) {
+      toast.error("Failed to delete script");
+    }
+  };
+
   const buttonStyle = {
     backgroundColor: "#2463EB",
     color: "white",
@@ -107,9 +123,50 @@ export default function ScriptLibraryPage() {
           it or copy it so you can use it straight away.
         </Typography>
       </Box>
+      <Box className="flex gap-2  p-4 mt-4 items-center justify-between">
+        <div>
+          Scripts per page:
+          <Select
+            sx={selectStyle}
+            value={pageSize}
+            onChange={(e) => setPageSize(Number(e.target.value))}
+          >
+            <MenuItem value={5}>5</MenuItem>
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={15}>15</MenuItem>
+          </Select>
+        </div>
+        <div className="flex gap-2 items-center">
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontWeight: "bold" }}
+          >
+            Filter by Script Type*
+          </Typography>
+          <Select
+            name="type"
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            displayEmpty
+            sx={selectStyle}
+          >
+            <MenuItem value="">All</MenuItem>
+            <MenuItem value="Unboxing">Unboxing</MenuItem>
+            <MenuItem value="Product Review">Product Review</MenuItem>
+            <MenuItem value="Tutorial">Tutorial</MenuItem>
+            <MenuItem value="Testimonial">Testmonial</MenuItem>
+          </Select>
+        </div>
+        <div>
+          <Button onClick={() => setPage(page - 1)}>Previous</Button> Page{" "}
+          {page} of {totalPages}
+          <Button onClick={() => setPage(page + 1)}>Next</Button>{" "}
+        </div>
+      </Box>
       {loading ? (
         <CircularProgress className="mt-4 text-center" />
-      ) : scripts.length === 0 ? (
+      ) : scripts?.length === 0 ? (
         <Typography
           variant="body2"
           color="text.secondary"
@@ -119,47 +176,8 @@ export default function ScriptLibraryPage() {
         </Typography>
       ) : (
         <>
-          <Box className="flex gap-2  p-4 mt-4 items-center justify-between">
-            <div>
-              Scripts per page:
-              <Select
-                sx={selectStyle}
-                value={pageSize}
-                onChange={(e) => setPageSize(Number(e.target.value))}
-              >
-                <MenuItem value={5}>5</MenuItem>
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={15}>15</MenuItem>
-              </Select>
-            </div>
-            <div className="flex gap-2 items-center">
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ fontWeight: "bold" }}
-              >
-                Filter by Script Type*
-              </Typography>
-              <Select
-                name="type"
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-                displayEmpty
-                sx={selectStyle}
-              >
-                <MenuItem value="">All</MenuItem>
-                <MenuItem value="Promo">Promo</MenuItem>
-                <MenuItem value="Tutorial">Tutorial</MenuItem>
-              </Select>
-            </div>
-            <div>
-              <Button onClick={() => setPage(page - 1)}>Previous</Button> Page{" "}
-              {page} of {totalPages}
-              <Button onClick={() => setPage(page + 1)}>Next</Button>{" "}
-            </div>
-          </Box>
           <Box>
-            {scripts.map((script: Script) => {
+            {scripts?.map((script: Script) => {
               return (
                 <Box
                   key={script._id}
@@ -191,6 +209,19 @@ export default function ScriptLibraryPage() {
                       }}
                     >
                       Edit script
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleDelete(script._id)}
+                      sx={{
+                        ...buttonStyle,
+                        color: "black",
+                        backgroundColor: "white",
+                        border: "1px solid #D9D9D999",
+                      }}
+                    >
+                      Delete
                     </Button>
                   </div>
                 </Box>

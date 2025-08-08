@@ -43,7 +43,6 @@ export async function GET(req: Request) {
 
   const { searchParams } = new URL(req.url);
 
-  console.log(searchParams);
   const page = parseInt(searchParams.get("page") || "1");
   const pageSize = parseInt(searchParams.get("limit") || "10");
   const type = searchParams.get("type") || "";

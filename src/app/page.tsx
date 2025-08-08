@@ -3,9 +3,12 @@
 import { Button } from "@mui/material";
 import Image from "next/image";
 import { SignInButton, useUser } from "@clerk/nextjs";
+import { useSubscription } from "@clerk/nextjs/experimental";
 
 export default function Home() {
   const { user } = useUser();
+  const { data } = useSubscription();
+  console.log(data?.id);
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <Image src="/logo.png" alt="Logo" width={300} height={300} />

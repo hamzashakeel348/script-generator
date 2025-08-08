@@ -9,8 +9,12 @@ import {
   Button,
   Typography,
   Paper,
+  CircularProgress,
 } from "@mui/material";
 import toast from "react-hot-toast";
+
+import { Protect } from "@clerk/nextjs";
+import { useSubscription } from "@clerk/nextjs/experimental";
 
 export default function ScriptGeneratorPage() {
   const [form, setForm] = useState({
@@ -24,7 +28,12 @@ export default function ScriptGeneratorPage() {
     cta: "",
   });
 
+  const [title, setTitle] = useState("");
   const [script, setScript] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const { data } = useSubscription();
+  console.log(data?.id);
 
   const handleReset = () => {
     setForm({
@@ -44,10 +53,31 @@ export default function ScriptGeneratorPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const generateScript = async () => {
-    setScript(
-      `Introducing ${form.productName}! Perfect for ${form.audience}.\n\nKey Benefits:\n${form.benefits}\n\nCall to Action: ${form.cta}`
-    );
+  const generateScriptApi = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("/api/generate-script", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: form.type,
+          industry: form.industry,
+          platform: form.platform,
+          duration: form.duration,
+          productName: form.productName,
+          benefits: form.benefits,
+          audience: form.audience,
+          cta: form.cta,
+        }),
+      });
+      const data = await response.json();
+      setTitle(data.title);
+      setScript(data.monologue);
+    } catch (error) {
+      toast.error("Failed to generate script");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSave = async () => {
@@ -56,7 +86,7 @@ export default function ScriptGeneratorPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: "New Script",
+          title: title,
           content: script,
           type: form.type,
         }),
@@ -86,6 +116,17 @@ export default function ScriptGeneratorPage() {
     textTransform: "none",
     border: "1px solid #D9D9D999",
   };
+
+  const buttonDisabled =
+    loading ||
+    !form.industry ||
+    !form.platform ||
+    !form.type ||
+    !form.duration ||
+    !form.productName ||
+    !form.benefits ||
+    !form.audience ||
+    !form.cta;
 
   return (
     <Box
@@ -125,8 +166,11 @@ export default function ScriptGeneratorPage() {
               displayEmpty
             >
               <MenuItem value="">Select Industry</MenuItem>
-              <MenuItem value="Fitness">Fitness</MenuItem>
-              <MenuItem value="Tech">Tech</MenuItem>
+              <MenuItem value="Beauty & Cosmetics">Beauty & Cosmetics</MenuItem>
+              <MenuItem value="Fitness & Health">Fitness & Health</MenuItem>
+              <MenuItem value="Technology">Technology</MenuItem>
+              <MenuItem value="Fashion">Fashion</MenuItem>
+              <MenuItem value="Food & Beverages">Food & Beverages</MenuItem>
             </Select>
 
             <Typography
@@ -143,8 +187,10 @@ export default function ScriptGeneratorPage() {
               displayEmpty
             >
               <MenuItem value="">Select Platform</MenuItem>
-              <MenuItem value="YouTube">YouTube</MenuItem>
+              <MenuItem value="TikTok">TikTok</MenuItem>
               <MenuItem value="Instagram">Instagram</MenuItem>
+              <MenuItem value="YouTube Shorts">YouTube Shorts</MenuItem>
+              <MenuItem value="Facebook">Facebook</MenuItem>
             </Select>
 
             <Typography
@@ -161,8 +207,10 @@ export default function ScriptGeneratorPage() {
               displayEmpty
             >
               <MenuItem value="">Select Script Type</MenuItem>
-              <MenuItem value="Promo">Promo</MenuItem>
+              <MenuItem value="Unboxing">Unboxing</MenuItem>
+              <MenuItem value="Product Review">Product Review</MenuItem>
               <MenuItem value="Tutorial">Tutorial</MenuItem>
+              <MenuItem value="Testimonial">Testmonial</MenuItem>
             </Select>
 
             <Typography
@@ -181,6 +229,7 @@ export default function ScriptGeneratorPage() {
               <MenuItem value="">Select Video Duration</MenuItem>
               <MenuItem value="15s">15 sec</MenuItem>
               <MenuItem value="30s">30 sec</MenuItem>
+              <MenuItem value="60s">60 sec</MenuItem>
             </Select>
 
             <Typography
@@ -240,22 +289,48 @@ export default function ScriptGeneratorPage() {
               value={form.cta}
               onChange={handleChange}
             />
-
-            <Button
-              variant="contained"
-              onClick={generateScript}
-              sx={{
-                backgroundColor: "#2463EB",
-                color: "white",
-                fontWeight: "600",
-                fontSize: "14px",
-                textTransform: "none",
-                borderRadius: "10px",
-                padding: "10px 20px",
-              }}
+            <Protect
+              condition={(has) => has({ plan: "paid_script_generator" })}
             >
-              Generate Script
-            </Button>
+              <Button
+                variant="contained"
+                onClick={generateScriptApi}
+                disabled={buttonDisabled}
+                sx={{
+                  backgroundColor: "#2463EB",
+                  color: "white",
+                  fontWeight: "600",
+                  fontSize: "14px",
+                  textTransform: "none",
+                  borderRadius: "10px",
+                  padding: "10px 20px",
+                }}
+              >
+                {loading ? <CircularProgress size={20} /> : "Generate Script"}
+              </Button>
+            </Protect>
+            {data?.id === "csub_311byCDSkIYh1Wii08baI10EbQx" && (
+              <Button
+                variant="contained"
+                onClick={() => {
+                  toast.error(
+                    "You need to be a paid user to generate a script"
+                  );
+                }}
+                disabled={loading}
+                sx={{
+                  backgroundColor: "#2463EB",
+                  color: "white",
+                  fontWeight: "600",
+                  fontSize: "14px",
+                  textTransform: "none",
+                  borderRadius: "10px",
+                  padding: "10px 20px",
+                }}
+              >
+                {loading ? <CircularProgress size={20} /> : "Generate Script"}
+              </Button>
+            )}
           </Box>
         </Paper>
       </Box>
@@ -321,17 +396,24 @@ export default function ScriptGeneratorPage() {
                 backgroundColor: "#2463EB",
                 color: "white",
               }}
+              disabled={loading || !script}
             >
               Copy
             </Button>
             <Button
               variant="outlined"
-              onClick={generateScript}
+              onClick={generateScriptApi}
               sx={buttonStyle}
+              disabled={buttonDisabled || !script}
             >
-              Regenerate Script
+              {loading ? <CircularProgress size={20} /> : "Regenerate Script"}
             </Button>
-            <Button variant="outlined" onClick={handleSave} sx={buttonStyle}>
+            <Button
+              variant="outlined"
+              onClick={handleSave}
+              sx={buttonStyle}
+              disabled={loading || !title || !script}
+            >
               Save to library
             </Button>
           </Box>
