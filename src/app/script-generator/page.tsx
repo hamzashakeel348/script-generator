@@ -309,7 +309,9 @@ export default function ScriptGeneratorPage() {
                 {loading ? <CircularProgress size={20} /> : "Generate Script"}
               </Button>
             </Protect>
-            {data?.id === "csub_311byCDSkIYh1Wii08baI10EbQx" && (
+            <Protect
+              condition={(has) => !has({ plan: "paid_script_generator" })}
+            >
               <Button
                 variant="contained"
                 onClick={() => {
@@ -317,7 +319,6 @@ export default function ScriptGeneratorPage() {
                     "You need to be a paid user to generate a script"
                   );
                 }}
-                disabled={loading}
                 sx={{
                   backgroundColor: "#2463EB",
                   color: "white",
@@ -330,7 +331,7 @@ export default function ScriptGeneratorPage() {
               >
                 {loading ? <CircularProgress size={20} /> : "Generate Script"}
               </Button>
-            )}
+            </Protect>
           </Box>
         </Paper>
       </Box>
